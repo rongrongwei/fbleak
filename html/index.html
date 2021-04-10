@@ -18,6 +18,7 @@
             padding-left:100px;
         }
         #nameSearch {
+	    font-size:22px;
             border: none;
             border-bottom: 2px solid orange;
         }
@@ -43,15 +44,16 @@
                     console.log(Http.responseText);
                     jsonResponse = JSON.parse(Http.responseText);
                     var percentileGif = jsonResponse.gif.percentile_gif;
+        	    document.getElementById("resultsHeader").innerHTML = "<h2>Results</h2>";
                     document.getElementById("resultsGif").innerHTML = "<div style=\"width:50%\"><div style=\"height:0;padding-bottom:56.25%;position:relative;width:100%\"> <iframe allowfullscreen=\"\" frameBorder=\"0\" height=\"100%\" src=\"" + percentileGif + "\" style=\"left:0;position:absolute;top:0\" width=\"100%\"></iframe></div></div>";
                     document.getElementById("searchDescription").innerHTML = "<h3>Name Searched: " + jsonResponse.base_data.name + "</h3><p>There are " + jsonResponse.base_data.fbleak_count + " " + jsonResponse.base_data.name + "s in the leak!<p>";
                     document.getElementById("ratioData").innerHTML = "<p>There are <b>" + jsonResponse.base_data.fb_census_ratio.substring(0,5) + "</b> times more " + jsonResponse.base_data.name + "s in the FB leak than in Census</p>";
                     document.getElementById("percentileData").innerHTML = "<h4>The " + jsonResponse.base_data.name + "s are in the " + jsonResponse.base_data.ratio_percentile + " percentile!</h4>";
                     var levelhtml = "<p>";
-                    if (parseFloat(jsonResponse.base_data.ratio_percentile) > 0.75) {
+                    if (parseFloat(jsonResponse.base_data.ratio_percentile) > 75) {
                         levelhtml += "That's <b>HIGHER</b> than 3/4 surnames! Maybe this is interesting! ";
                     }
-                    else if (parseFloat(jsonResponse.base_data.ratio_percentile) < 0.25) {
+                    else if (parseFloat(jsonResponse.base_data.ratio_percentile) < 25) {
                         levelhtml += "That's <b>LOWER</b> than 3/4! Maybe this is maybe good?! ";
                     }
                     else if (jsonResponse.base_data.ratio_percentile == "unknown") {
@@ -74,7 +76,7 @@
         <input type="text" id="nameSearch" placeholder="Type a last name here..." title="Name Search">
         <input type='button' id='searchButton' value='Search' onClick='getNameData()'>
 
-        <h2>Results</h2>
+        <div id="resultsHeader"></div>
         <div id="searchDescription"></div>
         <div id="ratioData"></div>
         <div id="percentileData"></div>
