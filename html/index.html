@@ -1,0 +1,92 @@
+<!doctype html>
+
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+
+    <title>FB NAME HACKS</title>
+    <meta name="description" content="FB Leak Name Search and Analysis">
+    <meta name="author" content="Rongrong Wei">
+    <style type="text/css">
+        * {
+            font-family: arial, sans-serif;
+        }
+
+        #allContent {
+            padding-top:30px;
+            padding-left:100px;
+        }
+        #nameSearch {
+            border: none;
+            border-bottom: 2px solid orange;
+        }
+    </style>
+
+
+</head>
+
+<body>
+    <div id="allContent">
+        <script type="text/javascript">
+            function getNameData() {
+                const Http = new XMLHttpRequest();
+
+                var url = 'search/?q=';
+                var query = document.getElementById("nameSearch").value;
+                console.log(query)
+
+                Http.open("GET", url + query);
+                Http.send();
+
+                Http.onreadystatechange = (e) => {
+                    console.log(Http.responseText);
+                    jsonResponse = JSON.parse(Http.responseText);
+                    var percentileGif = jsonResponse.gif.percentile_gif;
+                    document.getElementById("resultsGif").innerHTML = "<div style=\"width:50%\"><div style=\"height:0;padding-bottom:56.25%;position:relative;width:100%\"> <iframe allowfullscreen=\"\" frameBorder=\"0\" height=\"100%\" src=\"" + percentileGif + "\" style=\"left:0;position:absolute;top:0\" width=\"100%\"></iframe></div></div>";
+                    document.getElementById("searchDescription").innerHTML = "<h3>Name Searched: " + jsonResponse.base_data.name + "</h3><p>There are " + jsonResponse.base_data.fbleak_count + " " + jsonResponse.base_data.name + "s in the leak!<p>";
+                    document.getElementById("ratioData").innerHTML = "<p>There are <b>" + jsonResponse.base_data.fb_census_ratio.substring(0,5) + "</b> times more " + jsonResponse.base_data.name + "s in the FB leak than in Census</p>";
+                    document.getElementById("percentileData").innerHTML = "<h4>The " + jsonResponse.base_data.name + "s are in the " + jsonResponse.base_data.ratio_percentile + " percentile!</h4>";
+                    var levelhtml = "<p>";
+                    if (parseFloat(jsonResponse.base_data.ratio_percentile) > 0.75) {
+                        levelhtml += "That's <b>HIGHER</b> than 3/4 surnames! Maybe this is interesting! ";
+                    }
+                    else if (parseFloat(jsonResponse.base_data.ratio_percentile) < 0.25) {
+                        levelhtml += "That's <b>LOWER</b> than 3/4! Maybe this is maybe good?! ";
+                    }
+                    else if (jsonResponse.base_data.ratio_percentile == "unknown") {
+                        levelhtml += "This name is <b>SPECIAL</b>. This unique name cannot be analyzed.";
+                    }
+                    else {
+                        levelhtml += "That's <b>AVERAGE.</b>";
+                    }
+                    levelhtml += "</p>"
+                    document.getElementById("analysisLevel").innerHTML = levelhtml;
+                }
+
+
+
+            }
+
+        </script>
+        <h1><span style="color:#29487d">FB</span> Name HACKS</h1> 
+        <p style="margin-top:-25px; margin-bottom:25px;">...for the Citrus HACKATHON!</p>
+        <input type="text" id="nameSearch" placeholder="Type a last name here..." title="Name Search">
+        <input type='button' id='searchButton' value='Search' onClick='getNameData()'>
+
+        <h2>Results</h2>
+        <div id="searchDescription"></div>
+        <div id="ratioData"></div>
+        <div id="percentileData"></div>
+        <div id="analysisLevel"></div>
+        <div id="resultsGif"> </div>
+        <br>
+        <div>Created by Rongrong (Emma) Wei 2021</div>
+    </div>
+
+    <!--  
+  <script src="js/scripts.js"></script>
+  -->
+</body>
+
+</html>
